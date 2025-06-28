@@ -1,5 +1,9 @@
 name: Unzip JNI
 
+# امنح صلاحية الكتابة على المحتوى
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
 
@@ -7,24 +11,21 @@ jobs:
   unzip:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout the repo
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # تأكد من أنّ الـ token يُحفظ للخطوات التالية
 
-      # 2. Unzip the jni.zip into the root directory
       - name: Unzip jni.zip
-        run: |
-          unzip jni.zip -d .
+        run: unzip jni.zip -d .
 
-      # 3. Configure git for commit
       - name: Set up Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 4. Commit and push changes
       - name: Commit & Push
         run: |
-          git add .
+          git add jni/
           git commit -m "Unzip JNI folder" || echo "No changes to commit"
           git push
