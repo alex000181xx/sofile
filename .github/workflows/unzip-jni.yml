@@ -1,6 +1,6 @@
+# .github/workflows/unzip-jni.yml
 name: Unzip JNI
 
-# امنح صلاحية الكتابة على المحتوى
 permissions:
   contents: write
 
@@ -11,19 +11,24 @@ jobs:
   unzip:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout using the PAT المخزّن في Secrets.ASD
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # تأكد من أنّ الـ token يُحفظ للخطوات التالية
+          token: ${{ secrets.ASD }}
+          persist-credentials: false
 
+      # 2. فك الضغط إلى الجذر
       - name: Unzip jni.zip
         run: unzip jni.zip -d .
 
+      # 3. إعداد Git للاعتماد
       - name: Set up Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # 4. إضافة التغييرات ورفعها
       - name: Commit & Push
         run: |
           git add jni/
