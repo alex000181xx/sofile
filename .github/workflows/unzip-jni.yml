@@ -4,28 +4,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  unzip-and-commit:
+  unzip:
     runs-on: ubuntu-latest
     steps:
-      # 1. جلب آخر نسخة من الريبو
-      - name: Checkout repo
+      # 1. Checkout the repo
+      - name: Checkout
         uses: actions/checkout@v3
 
-      # 2. فك ضغط الملف
+      # 2. Unzip the jni.zip into the root directory
       - name: Unzip jni.zip
         run: |
           unzip jni.zip -d .
-          # (هذا يفكّ jni.zip في مسار الريبو الجذري)
 
-      # 3. إعداد git لعملية الCommit
-      - name: Configure Git
+      # 3. Configure git for commit
+      - name: Set up Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 4. إضافة التغييرات ورفعها
-      - name: Commit and push changes
+      # 4. Commit and push changes
+      - name: Commit & Push
         run: |
           git add .
-          git commit -m "Unzip JNI folder via Action" || echo "No changes to commit"
+          git commit -m "Unzip JNI folder" || echo "No changes to commit"
           git push
