@@ -1,0 +1,21 @@
+name: Unzip JNI
+
+on:
+  push:
+    paths:
+      - 'jni.zip'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip jni.zip
+        run: unzip jni.zip -d jni_unzipped
+      - name: Commit unzipped files
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
+          git add jni_unzipped
+          git commit -m "Unzipped jni.zip automatically" || echo "No changes to commit"
+          git push
